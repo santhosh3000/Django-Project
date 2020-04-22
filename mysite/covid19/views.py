@@ -3,36 +3,30 @@ import io
 import urllib
 import matplotlib.pyplot as plt
 import requests
-
 from django.shortcuts import render
 
 def chart(request):
-    dates = range(1,52)
+    days = range(1,52)
     sweden = []
-    denmark = []
+    norway = []
 
-    swedenRequest = requests.get('https://api.covid19api.com/country/sweden/status/confirmed?from=2020-03-01T00:00:00Z&to=2020-04-21T00:00:00Z')
-    denmarkRequest = requests.get('https://api.covid19api.com/country/norway/status/confirmed?from=2020-03-01T00:00:00Z&to=2020-04-21T00:00:00Z')
+    swedenRequest = requests.get('https://api.covid19api.com/country/sweden/status/confirmed?from=2020-03-01T00:00:00Z&to=2020-04-21T00:00:00Z') # March 1 - April 21
+    norwayRequest = requests.get('https://api.covid19api.com/country/norway/status/confirmed?from=2020-03-01T00:00:00Z&to=2020-04-21T00:00:00Z') # March 1 - April 21
 
     swedenData = swedenRequest.json()
-    denmarkData = denmarkRequest.json()
+    norwayData = norwayRequest.json()
 
     for i in range(51):
         sweden.append(swedenData[i]['Cases'])
-        denmark.append(denmarkData[i]['Cases'])
+        norway.append(norwayData[i]['Cases'])
 
-
-    # plot the data
-    plt.title("Sweden vs Denmark Total Covid-19 Cases")
-
-    plt.plot(dates, sweden, color = 'gold')
-    plt.plot(dates, denmark, color = 'firebrick')
-
-    plt.legend(["Sweden", "Denmark"])
-
-    plt.xlabel('March 1$^{st}$, 2020 to April 21$^{st}$, 2020')
+    # plotting data
+    plt.title("Sweden vs Norway Total Covid-19 Cases")
+    plt.legend(["Sweden", "Norway"])
+    plt.plot(days, sweden, color = 'gold')
+    plt.plot(days, norway, color = 'firebrick')
     plt.ylabel('# of Confirmed Cases')
-
+    plt.xlabel('March 1$^{st}$, 2020 to April 21$^{st}$, 2020')
 
     # generate figure and send it to the html template
     fig = plt.gcf()
